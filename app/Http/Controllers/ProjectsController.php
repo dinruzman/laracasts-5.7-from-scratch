@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 use App\Project;
+use File;
+use Auth;
+use illuminate\Filesystem\Filesystem;
 
 use Illuminate\Http\Request;
 
@@ -24,14 +27,16 @@ class ProjectsController extends Controller
     }
 
     public function store(){
-        $attributes = request()->validate([
+        request()->validate([
             'title'=>['required','min:3'],
             'description'=>['required','min:3']
         ]);
 
-        $attributes['owner_id']= auth()->id();
-
-        Project::create($attributes);
+        Project::create([
+            'owner_id' => Auth::id(),
+            'title'=>request('title'),
+            'description'=>request('description'),
+        ]);
 
         return redirect('/projects');
     }
@@ -41,25 +46,29 @@ class ProjectsController extends Controller
     }
 
     public function update(Project $project){
-
         $project->title = request('title');
         $project->description = request('description');
 
-        $project->save();
-        // $project->update([
-        //     'title',
-        //     'description'
-        // ]);
-        //dd($project);
+        $project->update();
+
         return redirect('/projects');
     }
 
-    public function show(Project $project){
-        if($project->owner_id !== auth()->id()){
-            abort(403);
-        }
+    // public function show(Project $project){
+    //     if($project->owner_id !== auth()->id()){
+    //         abort(403);
+    //     }
 
-        return view('/projects.show',compact('project'));
+    //     return view('/projects.show',compact('project'));
+    // }
+
+    public function show(Filesystem $file){
+        dd($file);
+        // if($project->owner_id !== auth()->id()){
+        //     abort(403);
+        // }
+
+        // return view('/projects.show',compact('project'));
     }
 
 

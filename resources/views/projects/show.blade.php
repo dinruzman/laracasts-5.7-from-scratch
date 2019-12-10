@@ -41,14 +41,14 @@
             </div>
         </div>
 
-        
+
         <div class='field'>
                 <div class="control">
                     <button type="submit" class="button is-link">New Task</button>
                 </div>
         </div>
 
-        
+
         @if($errors->all())
             <div class="notification is-danger">
                 <ul>
